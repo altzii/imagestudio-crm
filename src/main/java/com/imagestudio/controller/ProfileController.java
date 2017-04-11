@@ -17,9 +17,10 @@ public class ProfileController {
     @Autowired
     UserService userService;
 
-    @GetMapping
+    @GetMapping("/user/profile")
     public String profilePage(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
         model.addAttribute("user", customUserDetails.getUser());

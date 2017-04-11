@@ -46,7 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("email")
                 .passwordParameter("password");
 
-        http.authorizeRequests().antMatchers("/profile", "/users").hasRole("USER");
+        http.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN");
+        http.authorizeRequests().antMatchers("/user/**").authenticated();
     }
 
     @Override
