@@ -2,7 +2,7 @@
 <#assign form=JspTaglibs["/META-INF/spring-form.tld"]>
 
 <html>
-<head><title>смена пароля</title>
+<head><title>Смена пароля</title>
 <body>
 <h2>Смена пароля</h2>
 <div>
@@ -10,12 +10,12 @@
 acceptCharset="UTF-8"  method="post">
     <div>
         <@form.input  id="oldPassword" type="password" name="oldPassword" path="oldPassword" class="form-control"
-        placeholder="old password"/>
+        placeholder="Текущий пароль"/>
         <p><@form.errors path="oldPassword" cssStyle="color: #ab2020;" /></p>
     </div>
     <div>
         <@form.input type="password" name="newPassword" path="newPassword" class="form-control"
-        placeholder="новый пароль"/>
+        placeholder="Новый пароль"/>
         <p><@form.errors path="newPassword" cssStyle="color: #ab2020;" /></p>
     </div>
     <div>
@@ -24,7 +24,7 @@ acceptCharset="UTF-8"  method="post">
         <p><@form.errors path="confirmPassword" cssStyle="color: #ab2020;"/></p>
         <p><@form.errors path="passwordsEquals" cssStyle="color: #ab2020;"/></p>
     </div>
-    <button type="submit">сменить пароль</button>
+    <button type="submit">Сменить пароль</button>
 </@form.form>
 </div>
 </body>

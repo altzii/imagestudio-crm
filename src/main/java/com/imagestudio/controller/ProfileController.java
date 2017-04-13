@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-import java.lang.reflect.Method;
 
 /**
  * Created by alt on 11.04.17.
@@ -27,6 +26,7 @@ import java.lang.reflect.Method;
 public class ProfileController {
     @Autowired
     UserService userService;
+
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -39,7 +39,7 @@ public class ProfileController {
     }
 
     @GetMapping("/change/password")
-    public String getChangePassword(Model model) {
+    public String getChangePasswordPage(Model model) {
         model.addAttribute("change_password_form", new ChangePasswordForm());
         return "user_change_password";
     }
@@ -52,10 +52,12 @@ public class ProfileController {
         if (!result.hasErrors()) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
             User user = customUserDetails.getUser();
-            user.setPassword(bCryptPasswordEncoder
-                            .encode(changePasswordForm.getConfirmPassword()));
+
+            user.setPassword(bCryptPasswordEncoder.encode(changePasswordForm.getConfirmPassword()));
             userService.update(user);
+
             return "redirect:/user/profile";
         }
         return "user_change_password";

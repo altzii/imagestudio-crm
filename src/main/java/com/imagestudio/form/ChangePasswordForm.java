@@ -1,6 +1,5 @@
 package com.imagestudio.form;
 
-import com.imagestudio.validator.annotation.ConfirmingPassword;
 import com.imagestudio.validator.annotation.PasswordCorrect;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -11,10 +10,10 @@ import javax.validation.constraints.Size;
  * Created by Rus on 11.04.2017.
  */
 public class ChangePasswordForm {
-    @Size(min = 3, max = 30, message = "Пароль должен быть от 3 до 30 символов")
     @NotEmpty(message = "Введите пароль")
     @PasswordCorrect
     private String oldPassword;
+
     @Size(min = 3, max = 30, message = "Пароль должен быть от 3 до 30 символов")
     @NotEmpty(message = "Введите пароль")
     private String newPassword;
@@ -46,10 +45,8 @@ public class ChangePasswordForm {
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
-    @AssertTrue(message="пароли не совпадают")
+    @AssertTrue(message="Введенные пароли не совпадают")
     public boolean isPasswordsEquals() {
-        if (newPassword != null)
-            return this.newPassword.equals(confirmPassword);
-        else return false;
+        return newPassword != null && this.newPassword.equals(confirmPassword);
     }
 }
