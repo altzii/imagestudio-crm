@@ -4,7 +4,6 @@
 <html>
 <head>
     <title>Регистрация</title>
-    <script defer src="/js/javascript.js"></script>
 </head>
 <body>
 <h2>Регистрация</h2>
@@ -52,3 +51,5 @@
 
 </body>
 </html>
+
+<script src="/js/javascript.js"></script>
