@@ -2,7 +2,10 @@
 <#assign form=JspTaglibs["/META-INF/spring-form.tld"]>
 
 <html>
-<head><title>Регистрация</title>
+<head>
+    <title>Регистрация</title>
+    <script defer src="/js/javascript.js"></script>
+</head>
 <body>
 <h2>Регистрация</h2>
 
@@ -19,17 +22,21 @@
     <@form.input  id="lastName" name="lastName" path="lastName"  class="form-control" placeholder="Фамилия"/>
     <p><@form.errors path="lastName" cssStyle="color: #ab2020;" /></p>
 </div>
-<div>
-    <@form.input type="password" name="password" path="password" class="form-control" placeholder="Пароль"/>
-    <p><@form.errors path="password" cssStyle="color: #ab2020;" /></p>
+<div><p><label>
+    <input onchange="checkGeneratePassword()" id="generate-password" type="checkbox"/>
+</label> Сгенерировать пароль</p></div>
+<div id="passwords">
+    <div>
+        <@form.input type="password" name="password" path="password" class="form-control" placeholder="Пароль"/>
+        <p><@form.errors path="password" cssStyle="color: #ab2020;" /></p>
+    </div>
+    <div>
+        <@form.input type="password" name="confirmPassword" path="confirmPassword" class="form-control" placeholder="Повторный ввод пароля"/>
+    </div>
+    <div>
+        <p><@form.errors path="confirmPassword" cssStyle="color: #ab2020;"/></p>
+    </div>
 </div>
-<div>
-    <@form.input type="password" name="confirmPassword" path="confirmPassword" class="form-control" placeholder="Повторный ввод пароля"/>
-</div>
-<div>
-    <p><@form.errors path="confirmPassword" cssStyle="color: #ab2020;"/></p>
-</div>
-
 <div>
 <p><@form.select path="role" id="role"></p>
     <option value="ROLE_DESIGNER">Дизайнер</option>
@@ -42,5 +49,6 @@
 <button type="submit">Регистрация</button>
 </@form.form>
 </div>
+
 </body>
 </html>
