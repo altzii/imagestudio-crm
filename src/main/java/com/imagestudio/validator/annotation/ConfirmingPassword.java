@@ -18,6 +18,7 @@ public @interface ConfirmingPassword {
     public static final String MESSAGE = "Введенные пароли не совпадают";
     String password();
     String confirmPassword();
+
     String message() default MESSAGE;
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
