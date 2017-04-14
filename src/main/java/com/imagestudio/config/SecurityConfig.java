@@ -13,6 +13,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.sql.DataSource;
 
 /**
  * Created by alt on 10.04.17.
@@ -22,10 +26,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @ComponentScan(value = "com.imagestudio")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
+    DataSource dataSource;
+
+    @Autowired
     CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     BCryptPasswordEncoder bcryptEncoder;
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
+        db.setDataSource(dataSource);
+        return db;
+    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -48,7 +62,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordParameter("password")
                 .and()
                 .authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN")
-                                    .antMatchers("/user/**").authenticated();
+                .antMatchers("/user/**").authenticated()
+                .and().rememberMe().tokenValiditySeconds(31536000)
+                .rememberMeParameter("remember-me")
+                .tokenRepository(persistentTokenRepository());
     }
 
     @Override
@@ -59,7 +76,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService()).passwordEncoder(bcryptEncoder);
-
     }
     @Bean
     public BCrypt bCrypt() {

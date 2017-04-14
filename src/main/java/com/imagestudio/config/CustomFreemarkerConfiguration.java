@@ -127,7 +127,6 @@ public class CustomFreemarkerConfiguration extends WebMvcConfigurerAdapter {
     }
 
     private static class MyFreeMarkerConfig implements FreeMarkerConfig {
-
         private final freemarker.template.Configuration configuration;
         private final TaglibFactory taglibFactory;
 
