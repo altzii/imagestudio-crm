@@ -6,6 +6,7 @@ import com.imagestudio.model.User;
 import com.imagestudio.repository.UserRepository;
 import com.imagestudio.service.RoleService;
 import com.imagestudio.service.UserService;
+import com.imagestudio.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -71,8 +72,13 @@ public class UserServiceImpl implements UserService {
         user.setEmail(signupForm.getEmail());
         user.setFirstName(signupForm.getFirstName());
         user.setLastName(signupForm.getLastName());
-        user.setPassword(passwordEncoder.encode(signupForm.getPassword()));
         user.setEnabled(true);
+
+        if (signupForm.getIsPasswordGenerate()) {
+            user.setPassword(StringUtils.generateRandomPassword());
+        } else {
+            user.setPassword(passwordEncoder.encode(signupForm.getPassword()));
+        }
 
         ArrayList<Role> roles = new ArrayList<>();
 

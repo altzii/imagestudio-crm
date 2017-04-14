@@ -3,6 +3,7 @@ package com.imagestudio.validator;
 
 import com.imagestudio.form.SignupForm;
 import com.imagestudio.validator.annotation.ConfirmingPassword;
+import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -10,7 +11,7 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * Created by alt on 06/05/2016.
  */
-
+@Component
 public class ConfirmingPasswordValidator implements ConstraintValidator<ConfirmingPassword, SignupForm> {
     private String password;
     private String confirmPassword;
@@ -23,33 +24,38 @@ public class ConfirmingPasswordValidator implements ConstraintValidator<Confirmi
     }
 
     public boolean isValid(SignupForm o, ConstraintValidatorContext constraintValidatorContext) {
-        try {
-            Object fieldObject = o.getPassword();
-            Object equalsToObject = o.getConfirmPassword();
+        if (o.getIsPasswordGenerate()) {
+            return true;
+        } else {
 
-            if (fieldObject == null && equalsToObject == null) {
-                return true;
-            }
+            try {
+                Object fieldObject = o.getPassword();
+                Object equalsToObject = o.getConfirmPassword();
 
-            boolean matches = (fieldObject != null)
-                    && fieldObject.equals(equalsToObject);
-
-            if (!matches) {
-                String msg = getMessage();
-                if (this.message == null
-                        || "".equals(getMessage())
-                        || ConfirmingPassword.MESSAGE.equals(getMessage())) {
-                    msg = "Введенные пароли не совпадают";
+                if (fieldObject == null && equalsToObject == null) {
+                    return true;
                 }
-                constraintValidatorContext.disableDefaultConstraintViolation();
-                constraintValidatorContext.buildConstraintViolationWithTemplate(msg)
-                        .addPropertyNode("confirmPassword").addConstraintViolation();
-            }
 
-            return matches;
-        } catch (final Exception ignored) {
+                boolean matches = (fieldObject != null)
+                        && fieldObject.equals(equalsToObject);
+
+                if (!matches) {
+                    String msg = getMessage();
+                    if (this.message == null
+                            || "".equals(getMessage())
+                            || ConfirmingPassword.MESSAGE.equals(getMessage())) {
+                        msg = "Введенные пароли не совпадают";
+                    }
+                    constraintValidatorContext.disableDefaultConstraintViolation();
+                    constraintValidatorContext.buildConstraintViolationWithTemplate(msg)
+                            .addPropertyNode("confirmPassword").addConstraintViolation();
+                }
+
+                return matches;
+            } catch (final Exception ignored) {
+            }
+            return false;
         }
-        return false;
     }
 
     public String getPassword() {

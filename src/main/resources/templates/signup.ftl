@@ -5,10 +5,10 @@
 <head>
     <title>Регистрация</title>
 </head>
-<body>
+<body onload="checkGeneratePassword()">
 <h2>Регистрация</h2>
 
-<@form.form commandName="signup_form" id="signup" action="/signup" acceptCharset="UTF-8"  method="post">
+<@form.form commandName="signup_form" id="signup" action="/admin/signup" acceptCharset="UTF-8"  method="post">
 <div>
     <@form.input  id="email" type="email" name="email" path="email" class="form-control" placeholder="Email"/>
     <p><@form.errors path="email" cssStyle="color: #ab2020;" /></p>
@@ -22,7 +22,7 @@
     <p><@form.errors path="lastName" cssStyle="color: #ab2020;" /></p>
 </div>
 <div><p><label>
-    <input onchange="checkGeneratePassword()" id="generate-password" type="checkbox"/>
+    <@form.checkbox onchange="checkGeneratePassword()" path="isPasswordGenerate" id="generate-password"/>
 </label> Сгенерировать пароль</p></div>
 <div id="passwords">
     <div>

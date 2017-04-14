@@ -36,6 +36,9 @@ public class SignupForm {
 
     private String role;
 
+    private boolean isPasswordGenerate;
+
+
     public String getRole() {
         return role;
     }
@@ -82,5 +85,13 @@ public class SignupForm {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public boolean getIsPasswordGenerate() {
+        return isPasswordGenerate;
+    }
+
+    public void setIsPasswordGenerate(boolean isPasswordGenerate) {
+        this.isPasswordGenerate = isPasswordGenerate;
     }
 }
