@@ -79,6 +79,11 @@
 			<version>0.6.0</version>
 		</dependency>
 		<dependency>
+			<groupId>it.ozimov</groupId>
+			<artifactId>spring-boot-freemarker-email</artifactId>
+			<version>0.6.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.16.16</version>

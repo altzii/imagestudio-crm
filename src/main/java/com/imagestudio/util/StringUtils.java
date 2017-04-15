@@ -8,7 +8,7 @@ import java.util.Random;
  */
 public class StringUtils {
     private static final Random RANDOM = new SecureRandom();
-    public static final int PASSWORD_LENGTH = 6;
+    public static final int PASSWORD_LENGTH = 8;
 
     public static String generateRandomPassword() {
         String letters = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789+@";
