@@ -31,7 +31,8 @@ public class AdminController {
     }
 
     @PostMapping(value = "/signup")
-    public String signup(@ModelAttribute("signup_form") @Valid SignupForm signupForm, BindingResult result) {
+    public String signup(@ModelAttribute("signup_form") @Valid SignupForm signupForm,
+                         BindingResult result) {
         if (result.hasErrors()) {
             return "signup";
         }

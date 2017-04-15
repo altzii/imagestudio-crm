@@ -1,5 +1,6 @@
 package com.imagestudio.service;
 
+import com.imagestudio.form.ChangePasswordForm;
 import com.imagestudio.form.SignupForm;
 import com.imagestudio.model.User;
 
@@ -22,4 +23,6 @@ public interface UserService {
     User findByEmail(String email);
 
     User signupUser(SignupForm signupForm);
+
+    User changePassword(ChangePasswordForm changePasswordForm, User user);
 }

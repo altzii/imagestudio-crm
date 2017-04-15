@@ -1,5 +1,6 @@
 package com.imagestudio.service.impl;
 
+import com.imagestudio.form.ChangePasswordForm;
 import com.imagestudio.form.SignupForm;
 import com.imagestudio.model.Role;
 import com.imagestudio.model.User;
@@ -25,6 +26,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     RoleService roleService;
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     @Transactional
@@ -67,8 +71,6 @@ public class UserServiceImpl implements UserService {
     public User signupUser(SignupForm signupForm) {
         User user = new User();
 
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
         user.setEmail(signupForm.getEmail());
         user.setFirstName(signupForm.getFirstName());
         user.setLastName(signupForm.getLastName());
@@ -77,7 +79,7 @@ public class UserServiceImpl implements UserService {
         if (signupForm.getIsPasswordGenerate()) {
             user.setPassword(StringUtils.generateRandomPassword());
         } else {
-            user.setPassword(passwordEncoder.encode(signupForm.getPassword()));
+            user.setPassword(bCryptPasswordEncoder.encode(signupForm.getPassword()));
         }
 
         ArrayList<Role> roles = new ArrayList<>();
@@ -91,5 +93,13 @@ public class UserServiceImpl implements UserService {
         user.setRoles(roles);
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public User changePassword(ChangePasswordForm changePasswordForm, User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(changePasswordForm.getConfirmPassword()));
+
+        return userRepository.saveAndFlush(user);
+
     }
 }

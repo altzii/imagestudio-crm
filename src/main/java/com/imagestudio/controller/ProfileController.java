@@ -1,13 +1,10 @@
 package com.imagestudio.controller;
 
 import com.imagestudio.form.ChangePasswordForm;
-import com.imagestudio.model.User;
 import com.imagestudio.security.CustomUserDetails;
 import com.imagestudio.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,39 +24,32 @@ public class ProfileController {
     @Autowired
     UserService userService;
 
-    @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
-
     @GetMapping("/profile")
-    public String profilePage(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        model.addAttribute("user", customUserDetails.getUser());
+    public String profilePage(Model model,
+                              @AuthenticationPrincipal CustomUserDetails userDetails) {
+        model.addAttribute("user", userDetails.getUser());
+
         return "profile";
     }
 
     @GetMapping("/change/password")
     public String getChangePasswordPage(Model model) {
         model.addAttribute("change_password_form", new ChangePasswordForm());
+
         return "user_change_password";
     }
 
     @PostMapping("/change/password")
-    public String changePassword(@ModelAttribute("change_password_form")
-                                 @Valid ChangePasswordForm changePasswordForm,
-                                 BindingResult result) {
+    public String changePassword(@ModelAttribute("change_password_form") @Valid ChangePasswordForm changePasswordForm,
+                                 BindingResult result,
+                                 @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         if (!result.hasErrors()) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-
-            User user = customUserDetails.getUser();
-
-            user.setPassword(bCryptPasswordEncoder.encode(changePasswordForm.getConfirmPassword()));
-            userService.update(user);
+            userService.changePassword(changePasswordForm, userDetails.getUser());
 
             return "redirect:/user/profile";
         }
+
         return "user_change_password";
     }
 }
