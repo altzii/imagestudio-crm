@@ -82,3 +82,6 @@ target/
 
 # ignore database settings (url, username, password)
 src/main/resources/application-database.properties
+
+# ignore email settings
+src/main/resources/application-email.properties

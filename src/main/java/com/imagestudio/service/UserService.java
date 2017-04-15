@@ -2,6 +2,7 @@ package com.imagestudio.service;
 
 import com.imagestudio.form.ChangePasswordForm;
 import com.imagestudio.form.SignupForm;
+import com.imagestudio.model.SignupConfirmation;
 import com.imagestudio.model.User;
 
 import java.util.List;
@@ -25,4 +26,6 @@ public interface UserService {
     User signupUser(SignupForm signupForm);
 
     User changePassword(ChangePasswordForm changePasswordForm, User user);
+
+    User confirmSignup(SignupConfirmation signupConfirmation);
 }

@@ -11,5 +11,7 @@
     <li>${user.firstName}</li>
     <li>${user.lastName}</li>
 </ul>
+
+<a href="/logout">Logout</a>
 </body>
 </html>

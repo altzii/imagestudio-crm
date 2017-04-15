@@ -3,12 +3,16 @@ package com.imagestudio.service.impl;
 import com.imagestudio.form.ChangePasswordForm;
 import com.imagestudio.form.SignupForm;
 import com.imagestudio.model.Role;
+import com.imagestudio.model.SignupConfirmation;
 import com.imagestudio.model.User;
 import com.imagestudio.repository.UserRepository;
+import com.imagestudio.service.MailSender;
 import com.imagestudio.service.RoleService;
+import com.imagestudio.service.SignupConfirmationService;
 import com.imagestudio.service.UserService;
 import com.imagestudio.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +33,13 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    SignupConfirmationService signupConfirmationService;
+
+    @Autowired
+    @Qualifier("myMailSender")
+    MailSender mailSender;
 
     @Override
     @Transactional
@@ -74,12 +85,16 @@ public class UserServiceImpl implements UserService {
         user.setEmail(signupForm.getEmail());
         user.setFirstName(signupForm.getFirstName());
         user.setLastName(signupForm.getLastName());
-        user.setEnabled(true);
+        user.setEnabled(false);
+
+        SignupConfirmation signupConfirmation = new SignupConfirmation();
+        signupConfirmation.setCode(java.util.UUID.randomUUID().toString());
+        signupConfirmation.setUser(user);
 
         if (signupForm.getIsPasswordGenerate()) {
             user.setPassword(StringUtils.generateRandomPassword());
         } else {
-            user.setPassword(bCryptPasswordEncoder.encode(signupForm.getPassword()));
+            user.setPassword(signupForm.getPassword());
         }
 
         ArrayList<Role> roles = new ArrayList<>();
@@ -92,7 +107,15 @@ public class UserServiceImpl implements UserService {
 
         user.setRoles(roles);
 
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        new Thread(() -> {
+            mailSender.sendConfirmationEmail(signupConfirmation);
+        }).start();
+
+        signupConfirmationService.create(signupConfirmation);
+
+        return user;
     }
 
     @Override
@@ -101,5 +124,20 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.saveAndFlush(user);
 
+    }
+
+    @Override
+    public User confirmSignup(SignupConfirmation signupConfirmation) {
+        User user = signupConfirmation.getUser();
+        user.setEnabled(true);
+        signupConfirmationService.delete(signupConfirmation);
+
+        new Thread(() -> {
+            mailSender.sendCredentialsEmail(user);
+        }).start();
+
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+
+        return userRepository.saveAndFlush(user);
     }
 }

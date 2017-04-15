@@ -34,3 +34,11 @@ CREATE TABLE IF NOT EXISTS persistent_logins (
   last_used timestamp NOT NULL,
   PRIMARY KEY (series)
 );
+
+CREATE TABLE IF NOT EXISTS signup_confirmations (
+	id serial,
+	user_id int,
+	code varchar
+);
+
+ALTER TABLE signup_confirmations ADD CONSTRAINT signup_confirmations_users_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE;
